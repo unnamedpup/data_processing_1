@@ -28,7 +28,7 @@ def parse_html(url):
 @handle_parsing_errors
 def parse_pdf(file_path):
     with pymupdf.open(file_path) as doc:
-        return "\n".join(page.get_text().strip() for page in doc)
+        return "\n".join(page.get_text().replace("\u200b", " ").strip() for page in doc)
 
 @handle_parsing_errors
 def parse_docx(file_path):
