@@ -46,7 +46,7 @@ python -m pytest tests/
 
 - DOC файлы:  
   Установите `antiword`:
-  ```bash
+  ```
   # Linux
   sudo apt-get install antiword
 
@@ -56,10 +56,21 @@ python -m pytest tests/
 
 - DJVU файлы:  
   Установите `djvutxt` (из пакета DjVuLibre):
-  ```bash
+  ```
   # Linux
   sudo apt-get install djvulibre-bin
 
   # macOS
   brew install djvulibre
   ```
+  
+## Языковые модели для spaCy
+
+Для работы с текстами на разных языках необходимо установить соответствующие модели spaCy:
+
+```
+python -m spacy download en_core_web_sm  # Английский
+python -m spacy download ru_core_news_sm  # Русский
+python -m spacy download de_core_news_sm  # Немецкий
+python -m spacy download fr_core_news_sm  # Французский
+python -m spacy download es_core_news_sm  # Испанский

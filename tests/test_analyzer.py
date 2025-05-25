@@ -11,37 +11,51 @@ def test_analyzer_empty_text():
     with pytest.raises(RuntimeError):
         ANALYZER.analyze("")
 
-def test_analyzer_grammar_errors():
+def test_analyzer_responce():
     analyzer = Analyzer()
     result, _ = analyzer.analyze("Привет мир!!! Александр Пушкин великий русский поэт.")
     assert len(result) > 0
 
+def text(token):
+    return token["text"] == "основатель"
 
-def base_form(token):
-    return token["text"] == "основатель" and token["lemma"] == "основатель"
+def lemma(token):
+    return token["lemma"] == "основатель"
 
 def part_of_speech(token):
-    return token["text"] == "основатель" and token["pos"] == "NOUN"
+    return token["pos"] == "NOUN"
 
-def dependency_type(token):
-    return token["text"] == "основатель" and token["dep"] == "ROOT"
+def tag(token):
+    return token["tag"] == "NOUN"
+
+def dependency(token):
+    return token["dep"] == "ROOT"
+
+def is_stop(token):
+    return token["is_stop"] == False
 
 @pytest.mark.parametrize(
     "cond",
     [
-        base_form,
+        text,
+        lemma,
         part_of_speech,
-        dependency_type,
+        tag,
+        dependency,
+        is_stop
     ]
 )
 def test_stats(cond):
     stats = ANALYZER.analyze("Стив Джобс основатель очень крупной компании")
-    print(stats[0][2])
     assert cond(stats[0][2])
 
 def test_entities():
     stats = ANALYZER.analyze("Стив Джобс основатель очень крупной компании")
     entity = stats[1][0]
-    print(entity)
     assert entity["text"] == "Стив Джобс" and entity["label"] == "PER"
+
+def test_language_detection():
+    assert ANALYZER._detect_language("wow it's work fast") == "en"
+
+
 
