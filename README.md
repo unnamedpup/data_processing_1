@@ -39,3 +39,27 @@ python main.py
 ```
 python -m pytest tests/
 ```
+
+## Системные зависимости
+
+Для работы с некоторыми форматами файлов требуются:
+
+- DOC файлы:  
+  Установите `antiword`:
+  ```bash
+  # Linux
+  sudo apt-get install antiword
+
+  # macOS
+  brew install antiword
+  ```
+
+- DJVU файлы:  
+  Установите `djvutxt` (из пакета DjVuLibre):
+  ```bash
+  # Linux
+  sudo apt-get install djvulibre-bin
+
+  # macOS
+  brew install djvulibre
+  ```
