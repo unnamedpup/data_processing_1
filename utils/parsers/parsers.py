@@ -11,7 +11,6 @@ def handle_parsing_errors(func):
     def wrapper(file_path):
         try:
             if not os.path.exists(file_path) and func.__name__ != "parse_html":
-                print(f"che:{func.__name__}")
                 raise FileNotFoundError
             return func(file_path)
         except UnicodeDecodeError as e:
