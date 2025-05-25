@@ -38,7 +38,7 @@ def parse_docx(file_path):
 @handle_parsing_errors
 def parse_doc(file_path):
     text = subprocess.run(
-        ["antiword", "-m", "utf-8.txt", str(file_path)],
+        ["antiword", "-m", "UTF-8.txt", str(file_path)],
         capture_output=True,
         text=True,
         check=True,
