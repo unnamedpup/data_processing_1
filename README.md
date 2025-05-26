@@ -50,7 +50,7 @@ data_processing_1/
 │   │   └── parsers.py       
 │   └── analyzer/          # Анализатор текста
 │       ├── __init__.py
-│       └── parsers.py
+│       └── analyzer.py
 │
 ├── tests/                 # Тесты
 │   ├── data/              # Данные для тестов
