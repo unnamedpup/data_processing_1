@@ -54,7 +54,7 @@ def main():
 
             text, stats, entities = process_input(user_input)
 
-            print(f"Текст):\n{text}")
+            print(f"Текст:\n{text}")
             print(f"Анализ:\n{pd.DataFrame(stats)}")
             if entities:
                 print(f"Сущности:\n{pd.DataFrame(entities)}")

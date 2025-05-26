@@ -40,6 +40,29 @@ python main.py
 python -m pytest tests/
 ```
 
+## Структура проекта
+
+```
+data_processing_1/
+├── utils/                 # Исходный код
+│   ├── parsers/           # Парсеры
+│   │   ├── __init__.py 
+│   │   └── parsers.py       
+│   └── analyzer/          # Анализатор текста
+│       ├── __init__.py
+│       └── parsers.py
+│
+├── tests/                 # Тесты
+│   ├── data/              # Данные для тестов
+│   ├── test_parsers.py
+│   ├── test_analyzer.py
+│   └── ...
+│
+├── main.py                # Основной скрипт обработки
+├── requirements.txt       # Зависимости Python
+└── README.md              
+```
+
 ## Системные зависимости
 
 Для работы с некоторыми форматами файлов требуются:
@@ -74,3 +97,6 @@ python -m spacy download ru_core_news_sm  # Русский
 python -m spacy download de_core_news_sm  # Немецкий
 python -m spacy download fr_core_news_sm  # Французский
 python -m spacy download es_core_news_sm  # Испанский
+```
+
+
