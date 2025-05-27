@@ -23,15 +23,16 @@
    На Windows: ```<venv_name>\Scripts\activate```
 
    На Linux/macOS: ```source <venv_name>/bin/activate```
-4. Установите зависимотси:
+4. Запустите установочный скрипт:
 
    ```
-    pip install -r requirements.txt
+    chmod +x setup.sh  # Даем права на выполнение
+    ./setup.sh         # Запускаем скрипт
    ```
 ## Запуск
-Для запуска проекта выполните команду:
+Для запуска проекта выполните команду (указывать путь до файла обязательно):
 ```
-python main.py
+python main.py <path/to/file>
 ```
 
 ## Тестирование
@@ -60,43 +61,8 @@ data_processing_1/
 │
 ├── main.py                # Основной скрипт обработки
 ├── requirements.txt       # Зависимости Python
+├── setup.sh               # Скрипт установки
 └── README.md              
-```
-
-## Системные зависимости
-
-Для работы с некоторыми форматами файлов требуются:
-
-- DOC файлы:  
-  Установите `antiword`:
-  ```
-  # Linux
-  sudo apt-get install antiword
-
-  # macOS
-  brew install antiword
-  ```
-
-- DJVU файлы:  
-  Установите `djvutxt` (из пакета DjVuLibre):
-  ```
-  # Linux
-  sudo apt-get install djvulibre-bin
-
-  # macOS
-  brew install djvulibre
-  ```
-  
-## Языковые модели для spaCy
-
-Для работы с текстами на разных языках необходимо установить соответствующие модели spaCy:
-
-```
-python -m spacy download en_core_web_sm  # Английский
-python -m spacy download ru_core_news_sm  # Русский
-python -m spacy download de_core_news_sm  # Немецкий
-python -m spacy download fr_core_news_sm  # Французский
-python -m spacy download es_core_news_sm  # Испанский
 ```
 
 

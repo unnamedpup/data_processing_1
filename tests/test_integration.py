@@ -9,5 +9,24 @@ def test_parse_nonvalid_format():
         process_input(PATHS.INVALID_FORMAT)
 
 def test_full_pipeline():
-    result = process_input(PATHS.VALID_DOCX)
+    result = process_input(PATHS.VALID_EN_DOCX)
     assert result[0] == "Hello world!!!" and result[1]
+
+def test_parse_nonexistent_file():
+    with pytest.raises(FileNotFoundError):
+        process_input(PATHS.NON_EXISTENT_DOC)
+
+def test_full_pipeline_with_entities():
+    text, result_of_analyze, entities = process_input(PATHS.FULL_PIPELINE_WITH_ENTITIES)
+    result_of_analyze_token = result_of_analyze[5]
+    entity = entities[0]
+    assert text == "Стив Джобс основатель очень крупной компании\nАлександр Сергеевич - великий русский поэт"
+    assert result_of_analyze_token["text"] == "компании"
+    assert result_of_analyze_token["lemma"] == "компания"
+    assert result_of_analyze_token["pos"] == "NOUN"
+    assert result_of_analyze_token["tag"] == "NOUN"
+    assert result_of_analyze_token["dep"] == "nmod"
+    assert result_of_analyze_token["is_stop"] == False
+    assert entity["text"] == "Стив Джобс"
+    assert entity["label"] == "PER"
+
