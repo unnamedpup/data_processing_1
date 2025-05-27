@@ -31,6 +31,9 @@ def process_input(input_path: Path) -> Union[
     parser = PARSERS[extension]
     text = parser(input_path)
     result_of_analyze, entities = analyze(text)
+    result_of_analyze = pd.DataFrame(result_of_analyze)
+    if entities:
+        entities = pd.DataFrame(entities)
     return text, result_of_analyze, entities
 
 def parse_args() -> argparse.Namespace:
@@ -52,8 +55,7 @@ def main():
         text, result_of_analyze, entities = process_input(path_to_file)
         print(f"Текст:\n{text}")
         print(f"Анализ:\n{result_of_analyze}")
-        if entities:
-            print(f"Сущности:\n{entities}")
+        print(f"Сущности:\n{entities}")
     except FileNotFoundError as e:
         print(f"Файл не найден: {str(e)}")
     except ValueError as e:
