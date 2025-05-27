@@ -1,4 +1,3 @@
-from typing import Union
 from utils.parsers.parsers import parse_html, parse_pdf, parse_docx, parse_doc, parse_djvu
 from utils.analyzer import analyze
 from pathlib import Path
@@ -14,10 +13,21 @@ PARSERS = {
     ".html": parse_html,
 }
 
-def process_input(input_path: Path) -> Union[
-    tuple[str, pd.DataFrame, pd.DataFrame | None],
-    Exception
-    ]:
+def process_input(input_path: Path) -> tuple[str, pd.DataFrame, pd.DataFrame | None] | Exception:
+    """
+    Функция отвечающая за вызов парсера и анализатора
+
+    Args:
+        input_path (Path): путь к файлу
+
+    Returns:
+    tuple[str, pd.DataFrame, pd.DataFrame | None] | Exception:
+    - Кортеж из:
+      * str - текст файла
+      * pd.DataFrame - результат анализа текста по токенам обернутый в DataFrame
+      * pd.DataFrame - сущности по токенам обернутый в DataFrame или None
+    - Или исключение в случае ошибки
+   """
     if not input_path.exists():
         raise FileNotFoundError(f"Ошибка: файла {input_path} не существует")
 
