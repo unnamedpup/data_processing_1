@@ -7,61 +7,70 @@ SUPPORTED_LANGUAGES = {
     "ru": "ru_core_news_sm",
 }
 
-def processing_text(text: str) -> Doc | Exception:
-    """
-    Функция возращающая рузльтат анализа текста
+
+def processing_text(text: str) -> Doc:
+    """Возвращает результат анализа текста с помощью spaCy.
 
     Args:
-        text (str): текст файла
+        text: Текст для анализа.
 
     Returns:
-         Doc | Exception: рузльтат анализа текста или исключение
-   """
+        Объект Doc с результатами анализа текста.
+
+    Raises:
+        ValueError: Если язык не поддерживается.
+        RuntimeError: Если модель не установлена.
+    """
     cleaned_text = " ".join(text.split())
     language = detect(cleaned_text)
     nlp = load_spacy_model(language)
     return nlp(cleaned_text)
 
-def load_spacy_model(language: str) -> spacy.language.Language | Exception:
-    """
-    Функция возращающая соответствующую языку модель анализатора
+
+def load_spacy_model(language: str) -> spacy.language.Language:
+    """Загружает модель spaCy для указанного языка.
 
     Args:
-        language (str): язык текста
+        language: Код языка (например, 'en' или 'ru').
 
     Returns:
-         spacy.language.Language | Exception: модель для анализа текста или исключение
-   """
+        Загруженная модель spaCy.
+
+    Raises:
+        ValueError: Если язык не поддерживается.
+        RuntimeError: Если модель не установлена.
+    """
     if language not in SUPPORTED_LANGUAGES:
-        raise ValueError(f"Данный язык ('{language}') не поддерживается")
+        raise ValueError(f"Язык '{language}' не поддерживается")
 
     model_name = SUPPORTED_LANGUAGES[language]
 
     try:
-        model = spacy.load(model_name)
+        return spacy.load(model_name)
     except OSError:
         raise RuntimeError(
-            f"Модель для языка ('{language}') не установлена!\n"
-            f"Для ее загрузки выполните команду: python -m spacy download {model_name}",
+            f"Модель для языка '{language}' не установлена!\n"
+            f"Для загрузки выполните: python -m spacy download {model_name}"
         )
 
-    return model
 
-def analyze(text: str) -> tuple[list[dict[str, str | bool]], list[dict[str, str]] | None] | Exception:
-    """
-    Функция возращающая соответствующую языку модель анализатора
+def analyze(text: str) -> tuple[list[dict[str, str | bool]], list[dict[str, str]] | None]:
+    """Анализирует текст и возвращает информацию о токенах и именованных сущностях.
 
     Args:
-        text (str): текст файла
+        text: Текст для анализа.
 
     Returns:
-        tuple[list[dict[str, str | bool]], list[dict[str, str]] | None] | Exception:
-        - Кортеж из:
-          * Списка словарей (ключ: str, значение: str или bool) - результат анализа текста по токенам
-          * Списка словарей (ключ: str, значение: str) или None - сущности по токенам или None
-        - Или исключение в случае ошибки
-   """
+        Кортеж из:
+        1. Список словарей с информацией о токенах
+        2. Список словарей с именованными сущностями или None
+
+    Raises:
+        ValueError: Если текст пустой или не может быть обработан.
+        RuntimeError: Если возникли проблемы при анализе текста.
+    """
     tokens = processing_text(text)
+
     result_of_analyze = [{
         "text": token.text,
         "lemma": token.lemma_,
@@ -70,6 +79,7 @@ def analyze(text: str) -> tuple[list[dict[str, str | bool]], list[dict[str, str]
         "dep": token.dep_,
         "is_stop": token.is_stop
     } for token in tokens]
+
     entities = [{
         "text": entity.text,
         "label": entity.label_,

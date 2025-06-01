@@ -19,8 +19,5 @@ def test_entities():
     entity = stats[1][0]
     assert entity["text"] == "Стив Джобс" and entity["label"] == "PER"
 
-# def test_language_detection():
-#     assert detect_language("wow it's work fast") == "en"
-
 
 

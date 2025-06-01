@@ -4,13 +4,13 @@ from main import process_input
 
 PATHS = TestFiles()
 
-def test_parse_nonvalid_format():
+def test_parse_non_valid_format():
     with pytest.raises(ValueError):
         process_input(PATHS.INVALID_FORMAT)
 
 def test_full_pipeline():
-    result = process_input(PATHS.VALID_EN_DOCX)
-    assert result[0] == "Hello world!!!" and result[1]
+    text, result_df, _ = process_input(PATHS.VALID_EN_DOCX)
+    assert text == "Hello world!!!" and not result_df.empty
 
 def test_parse_nonexistent_file():
     with pytest.raises(FileNotFoundError):
@@ -18,8 +18,8 @@ def test_parse_nonexistent_file():
 
 def test_full_pipeline_with_entities():
     text, result_of_analyze, entities = process_input(PATHS.FULL_PIPELINE_WITH_ENTITIES)
-    result_of_analyze_token = result_of_analyze[5]
-    entity = entities[0]
+    result_of_analyze_token = result_of_analyze.iloc[5]
+    entity = entities.iloc[0]
     assert text == "Стив Джобс основатель очень крупной компании\nАлександр Сергеевич - великий русский поэт"
     assert result_of_analyze_token["text"] == "компании"
     assert result_of_analyze_token["lemma"] == "компания"

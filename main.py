@@ -1,7 +1,6 @@
 from utils.parsers.parsers import parse_html, parse_pdf, parse_docx, parse_doc, parse_djvu
 from utils.analyzer import analyze
 from pathlib import Path
-from urllib.parse import urlparse
 import pandas as pd
 import argparse
 
@@ -13,54 +12,63 @@ PARSERS = {
     ".html": parse_html,
 }
 
-def process_input(input_path: Path) -> tuple[str, pd.DataFrame, pd.DataFrame | None] | Exception:
-    """
-    Функция отвечающая за вызов парсера и анализатора
+
+def process_input(input_path: Path) -> tuple[str, pd.DataFrame, pd.DataFrame | None]:
+    """Обрабатывает входной файл: парсит текст и выполняет лингвистический анализ.
 
     Args:
-        input_path (Path): путь к файлу
+        input_path: Путь к файлу для обработки.
 
     Returns:
-    tuple[str, pd.DataFrame, pd.DataFrame | None] | Exception:
-    - Кортеж из:
-      * str - текст файла
-      * pd.DataFrame - результат анализа текста по токенам обернутый в DataFrame
-      * pd.DataFrame - сущности по токенам обернутый в DataFrame или None
-    - Или исключение в случае ошибки
-   """
+        Кортеж из:
+        1. Текст файла
+        2. DataFrame с анализом токенов
+        3. DataFrame с сущностями или None
+
+    Raises:
+        FileNotFoundError: Если файл не существует.
+        ValueError: Если путь не является файлом или формат не поддерживается.
+    """
     if not input_path.exists():
-        raise FileNotFoundError(f"Ошибка: файла {input_path} не существует")
+        raise FileNotFoundError(f"Файл {input_path} не существует")
 
     if not input_path.is_file():
-        raise ValueError(f"Ошибка: {input_path} не является файлом")
+        raise ValueError(f"{input_path} не является файлом")
 
     extension = input_path.suffix.lower()
     if extension not in PARSERS:
-        raise ValueError(f"Ошибка: неподдерживаемый формат {extension}")
+        raise ValueError(f"Неподдерживаемый формат {extension}")
 
-    parser = PARSERS[extension]
-    text = parser(input_path)
+    text = PARSERS[extension](input_path)
     result_of_analyze, entities = analyze(text)
-    result_of_analyze = pd.DataFrame(result_of_analyze)
-    if entities:
-        entities = pd.DataFrame(entities)
-    return text, result_of_analyze, entities
+    result_df = pd.DataFrame(result_of_analyze)
+    entities_df = pd.DataFrame(entities) if entities else None
+    return text, result_df, entities_df
+
 
 def parse_args() -> argparse.Namespace:
+    """Парсит аргументы командной строки.
+
+    Returns:
+        Объект с разобранными аргументами.
+    """
     parser = argparse.ArgumentParser(
         description="Файловый парсер\n"
                     "Поддерживаемые форматы: url, 'pdf', 'docx', 'doc', 'djvu'\n"
                     "Поддерживаемые языки: 'ru' и 'en'\n",
         epilog="Пример использования:\n"
                "  python main.py input.pdf\n",
-        formatter_class=argparse.RawTextHelpFormatter  # чтобы \n работали в epilog
+        formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument("path", type=Path, help="Путь до файла (обязательный)")
     return parser.parse_args()
 
+
 def main():
+    """Основная функция для запуска парсера из командной строки."""
     args = parse_args()
     path_to_file = args.path
+
     try:
         text, result_of_analyze, entities = process_input(path_to_file)
         print(f"Текст:\n{text}")
@@ -74,6 +82,7 @@ def main():
         print(f"Ошибка анализа: {str(e)}")
     except Exception as e:
         print(f"Неожиданная ошибка: {str(e)}")
+
 
 if __name__ == "__main__":
     main()
